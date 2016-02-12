@@ -6,7 +6,7 @@ class Commands::AwardPoints < Commands::Base
   end
 
   def error_message
-    return unauthorized unless admin?
+    return unauthorized unless can_award_points?
     return invalid_token unless token_valid?
     return invalid_amount unless amount_valid?
     return invalid_posse unless posse
@@ -39,6 +39,12 @@ class Commands::AwardPoints < Commands::Base
 
   def amount_valid?
     amount != 0
+  end
+
+  def can_award_points?
+    admin? ||
+      (mentor? && posse.try(:name) != 'Mentors') ||
+      (!mentor? && ['Mentors', 'Instructor'].include?(posse.try(:name)))
   end
 
   def invalid_amount

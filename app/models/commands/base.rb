@@ -17,6 +17,10 @@ class Commands::Base
     uid.present? && Auth.admin_uid?(uid)
   end
 
+  def mentor?
+    uid.present? && Auth.mentor_uid?(uid)
+  end
+
   def token_valid?
     options["token"] == ENV["SLACK_AUTH_TOKEN"]
   end
